@@ -99,7 +99,7 @@ class PlantWidget extends StatelessWidget {
               ),
             )
           ],
-        ),  
+        ),
       ),
     );
   }

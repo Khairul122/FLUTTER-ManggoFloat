@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding/constants.dart';
 import 'package:flutter_onboarding/models/plants.dart';
-import 'package:flutter_onboarding/ui/screens/widgets/plant_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:hive/hive.dart';
+import 'dart:async';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -16,12 +16,25 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   List<Plant> _addedToCartPlants = [];
   bool _isLoading = true;
-  int _totalPrice = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _fetchUserDataAndCartPlants();
+    _startAutoRefresh();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startAutoRefresh() {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      _fetchUserDataAndCartPlants();
+    });
   }
 
   Future<void> _fetchUserDataAndCartPlants() async {
@@ -33,7 +46,7 @@ class _CartPageState extends State<CartPage> {
       print('User ID: $userId');
 
       if (userId != 0) {
-        print('Fetching cart plants for user ID: $userId'); // Debugging
+        print('Fetching cart plants for user ID: $userId');
         final response = await http.get(
           Uri.parse('http://192.168.74.108/backend-manggofloat/PembelianAPI.php?id_pengguna=$userId'),
         );
@@ -44,16 +57,17 @@ class _CartPageState extends State<CartPage> {
         if (response.statusCode == 200) {
           try {
             final List<dynamic> responseBody = json.decode(response.body);
-            print('Parsed response body: $responseBody'); // Debugging
+            print('Parsed response body: $responseBody');
 
             if (responseBody.isNotEmpty) {
               setState(() {
                 _addedToCartPlants = responseBody.map((data) {
-                  print('Plant data from API: $data'); // Debugging
-                  return Plant.fromJson(data);
+                  print('Plant data from API: $data');
+                  final plant = Plant.fromJson(data);
+                  print('Parsed plant: ${plant.plantName}, price: ${plant.price}');
+                  return plant;
                 }).toList();
-                _calculateTotalPrice();
-                print('Parsed plant data: $_addedToCartPlants'); // Debugging
+                print('Parsed plant data: $_addedToCartPlants');
                 _isLoading = false;
               });
             } else {
@@ -72,13 +86,13 @@ class _CartPageState extends State<CartPage> {
           setState(() {
             _isLoading = false;
           });
-          print('Failed to load cart plants, status code: ${response.statusCode}'); // Debugging
+          print('Failed to load cart plants, status code: ${response.statusCode}');
         }
       } else {
         setState(() {
           _isLoading = false;
         });
-        print('User ID is not available'); // Debugging
+        print('User ID is not available');
       }
     } catch (e) {
       setState(() {
@@ -86,16 +100,6 @@ class _CartPageState extends State<CartPage> {
       });
       print('Error fetching cart plants: $e');
     }
-  }
-
-  void _calculateTotalPrice() {
-    int total = 0;
-    for (var plant in _addedToCartPlants) {
-      total += plant.price; // Gunakan totalPrice dari setiap produk
-    }
-    setState(() {
-      _totalPrice = total;
-    });
   }
 
   @override
@@ -131,50 +135,82 @@ class _CartPageState extends State<CartPage> {
               : Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
                   height: size.height,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: _addedToCartPlants.length,
-                          scrollDirection: Axis.vertical,
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (BuildContext context, int index) {
-                            return PlantWidget(
-                              index: index,
-                              plantList: _addedToCartPlants,
-                            );
-                          },
+                  child: ListView.builder(
+                    itemCount: _addedToCartPlants.length,
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      final plant = _addedToCartPlants[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                      ),
-                      Column(
-                        children: [
-                          const Divider(
-                            thickness: 1.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
                             children: [
-                              const Text(
-                                'Totals',
-                                style: TextStyle(
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.w300,
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: NetworkImage(plant.imageURL),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                              Text(
-                                r'Rp' + _totalPrice.toString(),
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                  color: Constants.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              const SizedBox(width: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    plant.plantName,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Rp${plant.price}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.orange,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Jumlah: ${plant.jumlah}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                   const SizedBox(height: 10),
+                                  Text(
+                                    'Total Harga: ${plant.totalHarga}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    'Status: ${plant.statusPembelian}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: plant.statusPembelian == 'Pending' ? Colors.red : Colors.green,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      );
+                    },
                   ),
                 ),
     );

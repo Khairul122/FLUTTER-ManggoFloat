@@ -5,6 +5,9 @@ class Plant {
   final String imageURL;
   final String description;
   final int stock;
+  final int jumlah;
+  final String statusPembelian;
+  final int totalHarga;
   bool isFavorated;
   bool isSelected;
 
@@ -15,20 +18,26 @@ class Plant {
     required this.imageURL,
     required this.description,
     required this.stock,
+    required this.jumlah,
+    required this.statusPembelian,
+    required this.totalHarga,
     required this.isFavorated,
     required this.isSelected,
   });
 
   factory Plant.fromJson(Map<String, dynamic> json) {
-    const String baseUrl = 'http://192.168.74.108/backend-manggofloat/'; // Tambahkan base URL di sini
+    const String baseUrl = 'http://192.168.74.108/backend-manggofloat/';
 
     return Plant(
-      plantId: int.tryParse(json['id_produk']?.toString() ?? '0') ?? 0, // Konversi ke int
-      price: int.tryParse(json['harga_produk']?.toString() ?? '0') ?? 0, // Konversi ke int
+      plantId: int.tryParse(json['id_produk']?.toString() ?? '0') ?? 0,
+      price: int.tryParse(json['harga_produk']?.toString() ?? '0') ?? 0,
       plantName: json['nama_produk'] ?? '',
-      imageURL: baseUrl + (json['gambar_produk'] ?? ''), // Bangun URL gambar lengkap
+      imageURL: baseUrl + (json['gambar_produk'] ?? ''),
       description: json['deskripsi_produk'] ?? '',
-      stock: int.tryParse(json['stok_produk']?.toString() ?? '0') ?? 0, // Konversi ke int jika perlu
+      stock: int.tryParse(json['stok_produk']?.toString() ?? '0') ?? 0,
+      jumlah: int.tryParse(json['jumlah']?.toString() ?? '0') ?? 0,
+      statusPembelian: json['status_pembelian'] ?? '',
+      totalHarga: int.tryParse(json['total_harga']?.toString() ?? '0') ?? 0,
       isFavorated: false,
       isSelected: false,
     );
