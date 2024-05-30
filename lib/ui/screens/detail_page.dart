@@ -90,17 +90,7 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          PlantFeature(
-                            title: 'Size',
-                            plantFeature: _plantList[widget.plantId].size,
-                          ),
-                          PlantFeature(
-                            title: 'Humidity',
-                            plantFeature:
-                                _plantList[widget.plantId].humidity.toString(),
-                          ),
-                        ],
+                      
                       ),
                     ),
                   ),
@@ -145,7 +135,7 @@ class _DetailPageState extends State<DetailPage> {
                             height: 10,
                           ),
                           Text(
-                            r'$' + _plantList[widget.plantId].price.toString(),
+                            r'Rp' + _plantList[widget.plantId].price.toString(),
                             style: TextStyle(
                               color: Constants.blackColor,
                               fontSize: 24.0,
@@ -156,13 +146,7 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                       Row(
                         children: [
-                          Text(
-                            _plantList[widget.plantId].rating.toString(),
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              color: Constants.primaryColor,
-                            ),
-                          ),
+                          
                           Icon(
                             Icons.star,
                             size: 30.0,
@@ -177,7 +161,7 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   Expanded(
                     child: Text(
-                      _plantList[widget.plantId].decription,
+                      _plantList[widget.plantId].description,
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                         height: 1.5,

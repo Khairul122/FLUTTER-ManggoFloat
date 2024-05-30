@@ -1,13 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding/constants.dart';
 import 'package:flutter_onboarding/ui/root_page.dart';
-import 'package:flutter_onboarding/ui/screens/forgot_password.dart';
 import 'package:flutter_onboarding/ui/screens/signup_page.dart';
 import 'package:flutter_onboarding/ui/screens/widgets/custom_textfield.dart';
+import 'package:flutter_onboarding/services/login_services.dart';
 import 'package:page_transition/page_transition.dart';
 
 class SignIn extends StatelessWidget {
-  const SignIn({Key? key}) : super(key: key);
+  SignIn({Key? key}) : super(key: key);
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _showDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Notification'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +55,17 @@ class SignIn extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              const CustomTextfield(
+              CustomTextfield(
+                controller: _emailController,
                 obscureText: false,
                 hintText: 'Email',
                 icon: Icons.alternate_email,
               ),
-              const CustomTextfield(
+              const SizedBox(
+                height: 20,
+              ),
+              CustomTextfield(
+                controller: _passwordController,
                 obscureText: true,
                 hintText: 'Password',
                 icon: Icons.lock,
@@ -46,12 +74,29 @@ class SignIn extends StatelessWidget {
                 height: 10,
               ),
               GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          child: const RootPage(),
-                          type: PageTransitionType.bottomToTop));
+                onTap: () async {
+                  try {
+                    final response = await ApiService.loginUser(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                    if (response['status'] == 'success') {
+                      _showDialog(context, 'Login berhasil');
+                      Future.delayed(Duration(seconds: 2), () {
+                        Navigator.pushReplacement(
+                          context,
+                          PageTransition(
+                            child: const RootPage(),
+                            type: PageTransitionType.bottomToTop,
+                          ),
+                        );
+                      });
+                    } else {
+                      _showDialog(context, 'Login gagal: ${response['message']}');
+                    }
+                  } catch (e) {
+                    _showDialog(context, 'Login gagal: $e');
+                  }
                 },
                 child: Container(
                   width: size.width,
@@ -59,8 +104,7 @@ class SignIn extends StatelessWidget {
                     color: Constants.primaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   child: const Center(
                     child: Text(
                       'Masuk',
@@ -69,36 +113,6 @@ class SignIn extends StatelessWidget {
                         fontSize: 18.0,
                       ),
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          child: const ForgotPassword(),
-                          type: PageTransitionType.bottomToTop));
-                },
-                child: Center(
-                  child: Text.rich(
-                    TextSpan(children: [
-                      TextSpan(
-                        text: 'Forgot Password? ',
-                        style: TextStyle(
-                          color: Constants.blackColor,
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'Atur Ulang Di Sini',
-                        style: TextStyle(
-                          color: Constants.primaryColor,
-                        ),
-                      ),
-                    ]),
                   ),
                 ),
               ),
@@ -118,57 +132,34 @@ class SignIn extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              Container(
-                width: size.width,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Constants.primaryColor),
-                    borderRadius: BorderRadius.circular(10)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      child: Image.asset('assets/images/google.png'),
-                    ),
-                    Text(
-                      'Masuk dengan Google',
-                      style: TextStyle(
-                        color: Constants.blackColor,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
               GestureDetector(
                 onTap: () {
                   Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          child: const SignUp(),
-                          type: PageTransitionType.bottomToTop));
+                    context,
+                    PageTransition(
+                      child: SignUp(),
+                      type: PageTransitionType.bottomToTop,
+                    ),
+                  );
                 },
                 child: Center(
                   child: Text.rich(
-                    TextSpan(children: [
-                      TextSpan(
-                        text: 'Buat Akun Baru? ',
-                        style: TextStyle(
-                          color: Constants.blackColor,
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Buat Akun Baru? ',
+                          style: TextStyle(
+                            color: Constants.blackColor,
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: 'Daftar',
-                        style: TextStyle(
-                          color: Constants.primaryColor,
+                        TextSpan(
+                          text: 'Daftar',
+                          style: TextStyle(
+                            color: Constants.primaryColor,
+                          ),
                         ),
-                      ),
-                    ]),
+                      ],
+                    ),
                   ),
                 ),
               ),
