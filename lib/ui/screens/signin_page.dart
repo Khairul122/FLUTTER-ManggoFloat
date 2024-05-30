@@ -86,7 +86,7 @@ class SignIn extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           PageTransition(
-                            child: const RootPage(),
+                            child: RootPage(),
                             type: PageTransitionType.bottomToTop,
                           ),
                         );

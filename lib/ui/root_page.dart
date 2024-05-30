@@ -10,6 +10,7 @@ import 'package:flutter_onboarding/ui/screens/profile_page.dart';
 import 'package:page_transition/page_transition.dart';
 
 class RootPage extends StatefulWidget {
+  
   const RootPage({Key? key}) : super(key: key);
 
   @override
@@ -48,7 +49,7 @@ class _RootPageState extends State<RootPage> {
   List<String> titleList = [
     'Home',
     'Favorite',
-    'Cart',
+    'Note',
     'Profile',
   ];
 
@@ -107,10 +108,10 @@ class _RootPageState extends State<RootPage> {
           onTap: (index) {
             setState(() {
               _bottomNavIndex = index;
-              final List<Plant> favoritedPlants = Plant.getFavoritedPlants();
+              // final List<Plant> favoritedPlants = Plant.getFavoritedPlants();
               final List<Plant> addedToCartPlants = Plant.addedToCartPlants();
 
-              favorites = favoritedPlants;
+              // favorites = favoritedPlants;
               myCart = addedToCartPlants.toSet().toList();
             });
           }),

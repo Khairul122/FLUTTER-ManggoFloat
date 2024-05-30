@@ -12,7 +12,7 @@
 12         to allow setting breakpoints, to provide hot reload, etc.
 13    -->
 14    <uses-permission android:name="android.permission.INTERNET" />
-14-->D:\Jokian\UNIMAL\Sistem Informasi\WEB ECOMMERCE\UAS\android\app\src\debug\AndroidManifest.xml:6:5-66
+14-->D:\Jokian\UNIMAL\Sistem Informasi\WEB ECOMMERCE\UAS\android\app\src\debug\AndroidManifest.xml:6:5-67
 14-->D:\Jokian\UNIMAL\Sistem Informasi\WEB ECOMMERCE\UAS\android\app\src\debug\AndroidManifest.xml:6:22-64
 15
 16    <application

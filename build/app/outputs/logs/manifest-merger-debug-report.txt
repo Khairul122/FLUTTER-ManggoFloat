@@ -98,7 +98,7 @@ INJECTED from D:\Jokian\UNIMAL\Sistem Informasi\WEB ECOMMERCE\UAS\android\app\sr
 		INJECTED from D:\Jokian\UNIMAL\Sistem Informasi\WEB ECOMMERCE\UAS\android\app\src\main\AndroidManifest.xml
 		INJECTED from D:\Jokian\UNIMAL\Sistem Informasi\WEB ECOMMERCE\UAS\android\app\src\debug\AndroidManifest.xml
 uses-permission#android.permission.INTERNET
-ADDED from D:\Jokian\UNIMAL\Sistem Informasi\WEB ECOMMERCE\UAS\android\app\src\debug\AndroidManifest.xml:6:5-66
+ADDED from D:\Jokian\UNIMAL\Sistem Informasi\WEB ECOMMERCE\UAS\android\app\src\debug\AndroidManifest.xml:6:5-67
 	android:name
 		ADDED from D:\Jokian\UNIMAL\Sistem Informasi\WEB ECOMMERCE\UAS\android\app\src\debug\AndroidManifest.xml:6:22-64
 uses-library#androidx.window.extensions

@@ -4,7 +4,7 @@ import 'package:flutter_onboarding/constants.dart';
 import 'screens/signin_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
+  const OnboardingScreen({Key? key, }) : super(key: key);
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -26,8 +26,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             padding: const EdgeInsets.only(right: 20, top: 20),
             child: InkWell(
               onTap: () {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => SignIn()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => SignIn()));
               }, //to login screen. We will update later
               child: const Text(
                 'Skip',
@@ -81,8 +81,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               curve: Curves.easeIn);
                         }
                       } else {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => SignIn()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => SignIn()));
                       }
                     });
                   },

@@ -58,7 +58,7 @@ class PlantWidget extends StatelessWidget {
                   child: SizedBox(
                     height: 80.0,
                     child:
-                    Image.asset(plantList[index].imageURL),
+                    Image.network(plantList[index].imageURL),
                   ),
                 ),
                 Positioned(
@@ -83,7 +83,7 @@ class PlantWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.only(right: 10),
               child: Text(
-                r'$' + plantList[index].price.toString(),
+                r'Rp' + plantList[index].price.toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0,

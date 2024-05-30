@@ -5,6 +5,7 @@ import 'package:flutter_onboarding/ui/screens/widgets/plant_widget.dart';
 
 class FavoritePage extends StatefulWidget {
   final List<Plant> favoritedPlants;
+  
   const FavoritePage({Key? key, required this.favoritedPlants})
       : super(key: key);
 

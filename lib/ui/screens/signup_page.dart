@@ -12,7 +12,8 @@ class SignUp extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final ValueNotifier<String> _selectedAddressNotifier = ValueNotifier<String>('Batuphat');
+  final ValueNotifier<String> _selectedAddressNotifier =
+      ValueNotifier<String>('Batuphat');
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +150,8 @@ class SignUp extends StatelessWidget {
                     color: Constants.primaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   child: const Center(
                     child: Text(
                       'Daftar',
@@ -182,8 +184,10 @@ class SignUp extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       PageTransition(
-                          child: SignIn(),
-                          type: PageTransitionType.bottomToTop));
+                        child:
+                            SignIn(), 
+                        type: PageTransitionType.bottomToTop,
+                      ));
                 },
                 child: Center(
                   child: Text.rich(

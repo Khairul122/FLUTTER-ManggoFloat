@@ -20,15 +20,17 @@ class Plant {
   });
 
   factory Plant.fromJson(Map<String, dynamic> json) {
+    const String baseUrl = 'http://192.168.74.108/backend-manggofloat/'; // Tambahkan base URL di sini
+
     return Plant(
-      plantId: json['id_produk'],
-      price: json['harga_produk'],
+      plantId: int.parse(json['id_produk']), // Konversi ke int
+      price: int.parse(json['harga_produk']), // Konversi ke int
       plantName: json['nama_produk'],
-      imageURL: json['gambar_produk'],
+      imageURL: baseUrl + json['gambar_produk'], // Bangun URL gambar lengkap
       description: json['deskripsi_produk'],
-      stock: json['stok_produk'],
-      isFavorated: false, // Assuming initial state
-      isSelected: false, // Assuming initial state
+      stock: int.parse(json['stok_produk']), // Konversi ke int jika perlu
+      isFavorated: false,
+      isSelected: false,
     );
   }
 
@@ -38,12 +40,10 @@ class Plant {
 
   static List<Plant> plantList = [];
 
-  // Get the favorited items
-  static List<Plant> getFavoritedPlants() {
+  static List<Plant> getFavoratedPlants() {
     return plantList.where((element) => element.isFavorated).toList();
   }
 
-  // Get the cart items
   static List<Plant> addedToCartPlants() {
     return plantList.where((element) => element.isSelected).toList();
   }
