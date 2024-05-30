@@ -23,12 +23,12 @@ class Plant {
     const String baseUrl = 'http://192.168.74.108/backend-manggofloat/'; // Tambahkan base URL di sini
 
     return Plant(
-      plantId: int.parse(json['id_produk']), // Konversi ke int
-      price: int.parse(json['harga_produk']), // Konversi ke int
-      plantName: json['nama_produk'],
-      imageURL: baseUrl + json['gambar_produk'], // Bangun URL gambar lengkap
-      description: json['deskripsi_produk'],
-      stock: int.parse(json['stok_produk']), // Konversi ke int jika perlu
+      plantId: int.tryParse(json['id_produk']?.toString() ?? '0') ?? 0, // Konversi ke int
+      price: int.tryParse(json['harga_produk']?.toString() ?? '0') ?? 0, // Konversi ke int
+      plantName: json['nama_produk'] ?? '',
+      imageURL: baseUrl + (json['gambar_produk'] ?? ''), // Bangun URL gambar lengkap
+      description: json['deskripsi_produk'] ?? '',
+      stock: int.tryParse(json['stok_produk']?.toString() ?? '0') ?? 0, // Konversi ke int jika perlu
       isFavorated: false,
       isSelected: false,
     );

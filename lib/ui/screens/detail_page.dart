@@ -18,6 +18,7 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   late Future<Plant> _plant;
   List<Plant> _cart = [];
+  int _quantity = 1;
 
   @override
   void initState() {
@@ -72,12 +73,15 @@ class _DetailPageState extends State<DetailPage> {
       print("Sending data to API: $body"); // Logging data yang dikirim ke API
 
       final response = await http.post(
-        Uri.parse('http://192.168.74.108/backend-penjualan/PembelianAPI.php'), // Sesuaikan URL backend Anda
+        Uri.parse('http://192.168.74.108/backend-manggofloat/PembelianAPI.php'), // Sesuaikan URL backend Anda
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: body,
       );
+
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
@@ -284,50 +288,62 @@ class _DetailPageState extends State<DetailPage> {
             Plant plant = snapshot.data!;
             return SizedBox(
               width: size.width * .9,
-              height: 50,
-              child: Row(
+              height: 100, // Adjusted height to accommodate the quantity selector
+              child: Column(
                 children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        try {
-                          Map<String, dynamic> userData = await getUserData();
-                          print("User Data: $userData"); // Logging untuk debugging
-                          int userId = int.parse(userData['id_pengguna'].toString()); // Ambil ID pengguna dari data yang disimpan dan konversi ke int
-                          int quantity = 1; // Jumlah produk yang dibeli
-                          double totalPrice = (plant.price * quantity).toDouble(); // Total harga
-                          String purchaseDate = DateFormat('yyyy-MM-dd').format(DateTime.now()); // Tanggal pembelian
+                  QuantitySelector(
+                    quantity: _quantity,
+                    onChanged: (newQuantity) {
+                      setState(() {
+                        _quantity = newQuantity;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 10), // Add some spacing
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () async {
+                            try {
+                              Map<String, dynamic> userData = await getUserData();
+                              print("User Data: $userData"); // Logging untuk debugging
+                              int userId = int.parse(userData['id_pengguna'].toString()); // Ambil ID pengguna dari data yang disimpan dan konversi ke int
+                              double totalPrice = (plant.price * _quantity).toDouble(); // Total harga
+                              String purchaseDate = DateFormat('yyyy-MM-dd').format(DateTime.now()); // Tanggal pembelian
 
-                          await checkout(userId, plant.plantId, quantity, totalPrice, purchaseDate);
-                        } catch (e) {
-                          _showDialog(context, 'Error', 'Terjadi kesalahan: $e');
-                          print('Error during checkout: $e');
-                        }
-                      },
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Constants.primaryColor,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              offset: const Offset(0, 1),
-                              blurRadius: 5,
-                              color: Constants.primaryColor.withOpacity(.3),
+                              await checkout(userId, plant.plantId, _quantity, totalPrice, purchaseDate);
+                            } catch (e) {
+                              _showDialog(context, 'Error', 'Terjadi kesalahan: $e');
+                              print('Error during checkout: $e');
+                            }
+                          },
+                          child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Constants.primaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: const Offset(0, 1),
+                                  blurRadius: 5,
+                                  color: Constants.primaryColor.withOpacity(.3),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'CHECKOUT',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
+                            child: const Center(
+                              child: Text(
+                                'CHECKOUT',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -337,6 +353,44 @@ class _DetailPageState extends State<DetailPage> {
           }
         },
       ),
+    );
+  }
+}
+
+class QuantitySelector extends StatelessWidget {
+  final int quantity;
+  final ValueChanged<int> onChanged;
+
+  const QuantitySelector({
+    Key? key,
+    required this.quantity,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: Icon(Icons.remove),
+          onPressed: () {
+            if (quantity > 1) {
+              onChanged(quantity - 1);
+            }
+          },
+        ),
+        Text(
+          quantity.toString(),
+          style: TextStyle(fontSize: 20),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            onChanged(quantity + 1);
+          },
+        ),
+      ],
     );
   }
 }

@@ -8,9 +8,9 @@ import 'package:flutter_onboarding/ui/screens/favorite_page.dart';
 import 'package:flutter_onboarding/ui/screens/home_page.dart';
 import 'package:flutter_onboarding/ui/screens/profile_page.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:hive/hive.dart';
 
 class RootPage extends StatefulWidget {
-  
   const RootPage({Key? key}) : super(key: key);
 
   @override
@@ -23,21 +23,19 @@ class _RootPageState extends State<RootPage> {
 
   int _bottomNavIndex = 0;
 
-  //List of the pages
+  // List of the pages
   List<Widget> _widgetOptions() {
     return [
       const HomePage(),
       FavoritePage(
         favoritedPlants: favorites,
       ),
-      CartPage(
-        addedToCartPlants: myCart,
-      ),
+      const CartPage(), // Use CartPage without parameters
       const ProfilePage(),
     ];
   }
 
-  //List of the pages icons
+  // List of the pages icons
   List<IconData> iconList = [
     Icons.home,
     Icons.favorite,
@@ -45,11 +43,11 @@ class _RootPageState extends State<RootPage> {
     Icons.person,
   ];
 
-  //List of the pages titles
+  // List of the pages titles
   List<String> titleList = [
     'Home',
     'Favorite',
-    'Note',
+    'Order',
     'Profile',
   ];
 
@@ -108,11 +106,6 @@ class _RootPageState extends State<RootPage> {
           onTap: (index) {
             setState(() {
               _bottomNavIndex = index;
-              // final List<Plant> favoritedPlants = Plant.getFavoritedPlants();
-              final List<Plant> addedToCartPlants = Plant.addedToCartPlants();
-
-              // favorites = favoritedPlants;
-              myCart = addedToCartPlants.toSet().toList();
             });
           }),
     );

@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding/constants.dart';
 import 'package:flutter_onboarding/models/plants.dart';
 import 'package:flutter_onboarding/ui/screens/detail_page.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_onboarding/services/plant_services.dart';
+import 'package:intl/intl.dart';
 
 class PlantWidget extends StatelessWidget {
   const PlantWidget({
@@ -16,6 +17,12 @@ class PlantWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    // Debug print untuk memastikan data
+    print('Plant Price: ${plantList[index].price}');
+
+    // Format number
+    final formatCurrency = NumberFormat.currency(locale: 'id', symbol: 'Rp');
 
     return GestureDetector(
       onTap: () {
@@ -83,7 +90,7 @@ class PlantWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.only(right: 10),
               child: Text(
-                r'Rp' + plantList[index].price.toString(),
+                formatCurrency.format(plantList[index].price),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0,
@@ -92,7 +99,7 @@ class PlantWidget extends StatelessWidget {
               ),
             )
           ],
-        ),
+        ),  
       ),
     );
   }
