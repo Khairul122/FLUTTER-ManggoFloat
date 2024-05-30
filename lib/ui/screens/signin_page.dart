@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding/constants.dart';
 import 'package:flutter_onboarding/ui/root_page.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_onboarding/ui/screens/signup_page.dart';
 import 'package:flutter_onboarding/ui/screens/widgets/custom_textfield.dart';
 import 'package:flutter_onboarding/services/login_services.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:hive/hive.dart';
 
 class SignIn extends StatelessWidget {
   SignIn({Key? key}) : super(key: key);
@@ -30,6 +32,13 @@ class SignIn extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _saveUserData(Map<String, dynamic> userData) async {
+    var box = Hive.box('userBox');
+    await box.put('userData', userData);
+    // Menampilkan data user pada debug console
+    print("User Data Saved: $userData");
   }
 
   @override
@@ -81,6 +90,7 @@ class SignIn extends StatelessWidget {
                       password: _passwordController.text,
                     );
                     if (response['status'] == 'success') {
+                      await _saveUserData(response['user']); // Menyimpan data pengguna
                       _showDialog(context, 'Login berhasil');
                       Future.delayed(Duration(seconds: 2), () {
                         Navigator.pushReplacement(

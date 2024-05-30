@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding/constants.dart';
 import 'package:flutter_onboarding/models/plants.dart';
 import 'package:flutter_onboarding/services/plant_services.dart';
-import 'package:flutter_onboarding/ui/screens/cart_page.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:hive/hive.dart';
 
 class DetailPage extends StatefulWidget {
   final int plantId;
@@ -27,12 +30,80 @@ class _DetailPageState extends State<DetailPage> {
     return plants.firstWhere((plant) => plant.plantId == id);
   }
 
-  //Toggle Favorite button
+  Future<Map<String, dynamic>> getUserData() async {
+    var box = Hive.box('userBox');
+    var userData = box.get('userData');
+    return userData != null ? Map<String, dynamic>.from(userData) : {};
+  }
+
+  // Function to show dialog
+  void _showDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Function to handle the checkout process
+  Future<void> checkout(int userId, int productId, int quantity, double totalPrice, String purchaseDate) async {
+    try {
+      var body = {
+        'id_pengguna': userId.toString(),
+        'id_produk': productId.toString(),
+        'jumlah': quantity.toString(),
+        'total_harga': totalPrice.toString(),
+        'tanggal_pembelian': purchaseDate,
+        'status_pembelian': 'Diproses', // atau status lainnya yang sesuai
+      };
+
+      print("Sending data to API: $body"); // Logging data yang dikirim ke API
+
+      final response = await http.post(
+        Uri.parse('http://192.168.74.108/backend-penjualan/PembelianAPI.php'), // Sesuaikan URL backend Anda
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        if (responseBody['status'] == 'success') {
+          // Jika berhasil
+          _showDialog(context, 'Berhasil', 'Checkout berhasil');
+        } else {
+          // Jika gagal
+          _showDialog(context, 'Gagal', 'Checkout gagal: ${responseBody['message']}');
+        }
+      } else {
+        // Jika gagal
+        _showDialog(context, 'Gagal', 'Checkout gagal: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      _showDialog(context, 'Error', 'Terjadi kesalahan: $e');
+      print('Error during checkout: $e');
+    }
+  }
+
+  // Function to toggle favorite status
   bool toggleIsFavorated(bool isFavorited) {
     return !isFavorited;
   }
 
-  //Toggle add remove from cart
+  // Function to toggle add/remove from cart
   bool toggleIsSelected(bool isSelected) {
     return !isSelected;
   }
@@ -206,7 +277,66 @@ class _DetailPageState extends State<DetailPage> {
           }
         },
       ),
-  
+      floatingActionButton: FutureBuilder<Plant>(
+        future: _plant,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Plant plant = snapshot.data!;
+            return SizedBox(
+              width: size.width * .9,
+              height: 50,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        try {
+                          Map<String, dynamic> userData = await getUserData();
+                          print("User Data: $userData"); // Logging untuk debugging
+                          int userId = int.parse(userData['id_pengguna'].toString()); // Ambil ID pengguna dari data yang disimpan dan konversi ke int
+                          int quantity = 1; // Jumlah produk yang dibeli
+                          double totalPrice = (plant.price * quantity).toDouble(); // Total harga
+                          String purchaseDate = DateFormat('yyyy-MM-dd').format(DateTime.now()); // Tanggal pembelian
+
+                          await checkout(userId, plant.plantId, quantity, totalPrice, purchaseDate);
+                        } catch (e) {
+                          _showDialog(context, 'Error', 'Terjadi kesalahan: $e');
+                          print('Error during checkout: $e');
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Constants.primaryColor,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              offset: const Offset(0, 1),
+                              blurRadius: 5,
+                              color: Constants.primaryColor.withOpacity(.3),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'CHECKOUT',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      ),
     );
   }
 }

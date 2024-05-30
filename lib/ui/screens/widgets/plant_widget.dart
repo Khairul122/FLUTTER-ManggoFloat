@@ -62,7 +62,7 @@ class PlantWidget extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  bottom: 5,
+                  bottom: 20,
                   left: 80,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

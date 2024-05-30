@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding/ui/screens/signin_page.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'ui/onboarding_screen.dart';
 
-void main() {
+void main() async{
+  await Hive.initFlutter();
+  await Hive.openBox('userBox');
   runApp(MyApp());
 }
 
