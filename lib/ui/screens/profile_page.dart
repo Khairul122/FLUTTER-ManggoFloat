@@ -15,6 +15,7 @@ class ProfilePage extends StatelessWidget {
     var userData = box.get('userData');
     String adminName = userData != null && userData['nama_pengguna'] != null ? userData['nama_pengguna'] : 'Admin Toko';
     String adminEmail = userData != null && userData['email'] != null ? userData['email'] : 'Admin@gmail.com';
+    String adminAddress = userData != null && userData['alamat'] != null ? userData['alamat'] : 'Alamat tidak tersedia';
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -29,7 +30,7 @@ class ProfilePage extends StatelessWidget {
                 width: 150,
                 child: const CircleAvatar(
                   radius: 60,
-                  backgroundImage: ExactAssetImage('assets/images/profile.jpg'),
+                  backgroundImage: ExactAssetImage('assets/images/user1.png'),
                 ),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -62,6 +63,12 @@ class ProfilePage extends StatelessWidget {
               ),
               Text(
                 adminEmail,
+                style: TextStyle(
+                  color: Constants.blackColor.withOpacity(.3),
+                ),
+              ),
+              Text(
+                adminAddress,
                 style: TextStyle(
                   color: Constants.blackColor.withOpacity(.3),
                 ),
