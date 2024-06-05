@@ -59,7 +59,8 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   // Function to handle the checkout process
-  Future<void> checkout(int userId, int productId, int quantity, double totalPrice, String purchaseDate) async {
+  Future<void> checkout(int userId, int productId, int quantity,
+      double totalPrice, String purchaseDate) async {
     try {
       var body = {
         'id_pengguna': userId.toString(),
@@ -67,13 +68,15 @@ class _DetailPageState extends State<DetailPage> {
         'jumlah': quantity.toString(),
         'total_harga': totalPrice.toString(),
         'tanggal_pembelian': purchaseDate,
-        'status_pembelian': 'Diproses', // atau status lainnya yang sesuai
+        'status_pembelian': 'Diproses',
+        'status_pembayaran': 'Belum Dibayar', // Menambahkan status pembayaran
       };
 
       print("Sending data to API: $body"); // Logging data yang dikirim ke API
 
       final response = await http.post(
-        Uri.parse('http://192.168.74.108/backend-manggofloat/PembelianAPI.php'), // Sesuaikan URL backend Anda
+        Uri.parse(
+            'http://192.168.5.108/backend-manggofloat/PembelianAPI.php'), // Sesuaikan URL backend Anda
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -90,11 +93,13 @@ class _DetailPageState extends State<DetailPage> {
           _showDialog(context, 'Berhasil', 'Checkout berhasil');
         } else {
           // Jika gagal
-          _showDialog(context, 'Gagal', 'Checkout gagal: ${responseBody['message']}');
+          _showDialog(
+              context, 'Gagal', 'Checkout gagal: ${responseBody['message']}');
         }
       } else {
         // Jika gagal
-        _showDialog(context, 'Gagal', 'Checkout gagal: ${response.reasonPhrase}');
+        _showDialog(
+            context, 'Gagal', 'Checkout gagal: ${response.reasonPhrase}');
       }
     } catch (e) {
       _showDialog(context, 'Error', 'Terjadi kesalahan: $e');
@@ -210,7 +215,8 @@ class _DetailPageState extends State<DetailPage> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    padding: const EdgeInsets.only(top: 80, left: 30, right: 30),
+                    padding:
+                        const EdgeInsets.only(top: 80, left: 30, right: 30),
                     height: size.height * .5,
                     width: size.width,
                     decoration: BoxDecoration(
@@ -288,7 +294,8 @@ class _DetailPageState extends State<DetailPage> {
             Plant plant = snapshot.data!;
             return SizedBox(
               width: size.width * .9,
-              height: 100, // Adjusted height to accommodate the quantity selector
+              height:
+                  100, // Adjusted height to accommodate the quantity selector
               child: Column(
                 children: [
                   QuantitySelector(
@@ -306,15 +313,22 @@ class _DetailPageState extends State<DetailPage> {
                         child: GestureDetector(
                           onTap: () async {
                             try {
-                              Map<String, dynamic> userData = await getUserData();
-                              print("User Data: $userData"); // Logging untuk debugging
-                              int userId = int.parse(userData['id_pengguna'].toString()); // Ambil ID pengguna dari data yang disimpan dan konversi ke int
-                              double totalPrice = (plant.price * _quantity).toDouble(); // Total harga
-                              String purchaseDate = DateFormat('yyyy-MM-dd').format(DateTime.now()); // Tanggal pembelian
+                              Map<String, dynamic> userData =
+                                  await getUserData();
+                              print(
+                                  "User Data: $userData"); // Logging untuk debugging
+                              int userId = int.parse(userData['id_pengguna']
+                                  .toString()); // Ambil ID pengguna dari data yang disimpan dan konversi ke int
+                              double totalPrice = (plant.price * _quantity)
+                                  .toDouble(); // Total harga
+                              String purchaseDate = DateFormat('yyyy-MM-dd')
+                                  .format(DateTime.now()); // Tanggal pembelian
 
-                              await checkout(userId, plant.plantId, _quantity, totalPrice, purchaseDate);
+                              await checkout(userId, plant.plantId, _quantity,
+                                  totalPrice, purchaseDate);
                             } catch (e) {
-                              _showDialog(context, 'Error', 'Terjadi kesalahan: $e');
+                              _showDialog(
+                                  context, 'Error', 'Terjadi kesalahan: $e');
                               print('Error during checkout: $e');
                             }
                           },
@@ -322,7 +336,7 @@ class _DetailPageState extends State<DetailPage> {
                             height: 40,
                             decoration: BoxDecoration(
                               color: Constants.primaryColor,
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
                                   offset: const Offset(0, 1),
@@ -333,7 +347,7 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                             child: const Center(
                               child: Text(
-                                'CHECKOUT',
+                                'ORDER',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20.0,

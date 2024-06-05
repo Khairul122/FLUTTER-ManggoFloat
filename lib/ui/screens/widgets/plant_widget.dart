@@ -6,6 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:flutter_onboarding/services/plant_services.dart';
 import 'package:intl/intl.dart';
 
+
 class PlantWidget extends StatelessWidget {
   const PlantWidget({
     Key? key, required this.index, required this.plantList,

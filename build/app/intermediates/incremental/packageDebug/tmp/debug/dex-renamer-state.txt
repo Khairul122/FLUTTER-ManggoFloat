@@ -1,4 +1,4 @@
-#Fri May 31 00:21:34 WIB 2024
+#Wed Jun 05 14:37:55 WIB 2024
 base.0=D\:\\Jokian\\UNIMAL\\Sistem Informasi\\WEB ECOMMERCE\\UAS\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex
