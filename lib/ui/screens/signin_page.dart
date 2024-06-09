@@ -5,6 +5,7 @@ import 'package:flutter_onboarding/ui/root_page.dart';
 import 'package:flutter_onboarding/ui/screens/signup_page.dart';
 import 'package:flutter_onboarding/ui/screens/widgets/custom_textfield.dart';
 import 'package:flutter_onboarding/services/login_services.dart';
+import 'package:flutter_onboarding/ui/splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:hive/hive.dart';
 
@@ -96,7 +97,7 @@ class SignIn extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           PageTransition(
-                            child: RootPage(),
+                            child: SplashScreen(),
                             type: PageTransitionType.bottomToTop,
                           ),
                         );

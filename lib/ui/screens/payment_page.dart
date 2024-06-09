@@ -7,8 +7,6 @@ import 'package:flutter_onboarding/ui/screens/dana_page.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'cod_page.dart';
-import 'dana_page.dart';
 
 class PaymentPage extends StatefulWidget {
   final Plant plant;
@@ -117,9 +115,12 @@ class _PaymentPageState extends State<PaymentPage> {
         : '';
     String alamat =
         userData != null ? Map<String, dynamic>.from(userData)['alamat'] : '';
+    double ongkir = userData != null
+        ? double.tryParse(Map<String, dynamic>.from(userData)['ongkir'].toString()) ?? 0
+        : 0;
 
     double subtotalProduk = widget.plant.price * widget.plant.jumlah.toDouble();
-    double totalHarga = subtotalProduk + 69000;
+    double totalHarga = subtotalProduk + ongkir;
 
     return Scaffold(
       appBar: AppBar(
@@ -192,7 +193,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     children: [
                       Text('Reguler',
                           style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text('Rp 69.000'),
+                      Text('Rp ${formatCurrency(ongkir)}'),
                     ],
                   ),
                 ],
@@ -260,7 +261,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   Divider(),
                   _buildPaymentDetailRow('Subtotal untuk Produk',
                       'Rp${formatCurrency(subtotalProduk)}'),
-                  _buildPaymentDetailRow('Subtotal Pengiriman', 'Rp69.000'),
+                  _buildPaymentDetailRow('Subtotal Pengiriman', 'Rp ${formatCurrency(ongkir)}'),
                   Divider(),
                   _buildPaymentDetailRow(
                     'Total Pembayaran',

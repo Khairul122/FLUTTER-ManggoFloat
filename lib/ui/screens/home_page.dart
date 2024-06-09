@@ -43,7 +43,6 @@ class _HomePageState extends State<HomePage> {
       'Recommended',
       'Favorite',
       'Terpopuler',
-
     ];
 
     bool toggleIsFavorated(bool isFavorited) {
@@ -227,7 +226,8 @@ class _HomePageState extends State<HomePage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               height: size.height * .5,
-              child: ListView.builder(                itemCount: _plantList.length,
+              child: ListView.builder(
+                itemCount: _plantList.length,
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
@@ -254,4 +254,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

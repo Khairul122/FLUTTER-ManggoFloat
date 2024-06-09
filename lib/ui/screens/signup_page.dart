@@ -12,8 +12,7 @@ class SignUp extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final ValueNotifier<String> _selectedAddressNotifier =
-      ValueNotifier<String>('Batuphat');
+  final ValueNotifier<String> _selectedAddressNotifier = ValueNotifier<String>('Batuphat');
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +26,15 @@ class SignUp extends StatelessWidget {
       'Simpang Len',
       'Medan',
     ];
+
+    // Map of addresses to shipping costs
+    final Map<String, int> shippingCosts = {
+      'Batuphat': 5000,
+      'Cunda': 10000,
+      'Blang Pulo': 15000,
+      'Simpang Len': 20000,
+      'Medan': 25000,
+    };
 
     return Scaffold(
       body: Padding(
@@ -113,12 +121,15 @@ class SignUp extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   try {
+                    final selectedAddress = _selectedAddressNotifier.value;
+                    final shippingCost = shippingCosts[selectedAddress] ?? 0; // Default value if address not found
                     final response = await ApiService.registerUser(
                       namaPengguna: _nameController.text,
                       email: _emailController.text,
                       password: _passwordController.text,
-                      alamat: _selectedAddressNotifier.value,
+                      alamat: selectedAddress,
                       noTelepon: _phoneController.text,
+                      ongkir: shippingCost,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -150,8 +161,7 @@ class SignUp extends StatelessWidget {
                     color: Constants.primaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   child: const Center(
                     child: Text(
                       'Daftar',
@@ -182,29 +192,31 @@ class SignUp extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                        child:
-                            SignIn(), 
-                        type: PageTransitionType.bottomToTop,
-                      ));
+                    context,
+                    PageTransition(
+                      child: SignIn(),
+                      type: PageTransitionType.bottomToTop,
+                    ),
+                  );
                 },
                 child: Center(
                   child: Text.rich(
-                    TextSpan(children: [
-                      TextSpan(
-                        text: 'Sudah Memiliki Akun? ',
-                        style: TextStyle(
-                          color: Constants.blackColor,
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Sudah Memiliki Akun? ',
+                          style: TextStyle(
+                            color: Constants.blackColor,
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: 'Masuk',
-                        style: TextStyle(
-                          color: Constants.primaryColor,
+                        TextSpan(
+                          text: 'Masuk',
+                          style: TextStyle(
+                            color: Constants.primaryColor,
+                          ),
                         ),
-                      ),
-                    ]),
+                      ],
+                    ),
                   ),
                 ),
               ),

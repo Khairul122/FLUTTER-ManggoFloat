@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl =
-      'http://10.0.2.2/backend-manggofloat/PenggunaAPI.php';
+  static const String baseUrl = 'http://10.0.2.2/backend-manggofloat/PenggunaAPI.php';
 
   static Future<Map<String, dynamic>> registerUser({
     required String namaPengguna,
@@ -11,6 +10,7 @@ class ApiService {
     required String password,
     required String alamat,
     required String noTelepon,
+    required int ongkir,
   }) async {
     final response = await http.post(
       Uri.parse(baseUrl),
@@ -24,6 +24,7 @@ class ApiService {
         'password': password,
         'alamat': alamat,
         'no_telepon': noTelepon,
+        'ongkir': ongkir.toString(),
       },
     );
 
