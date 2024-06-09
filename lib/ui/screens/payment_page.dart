@@ -46,6 +46,7 @@ class _PaymentPageState extends State<PaymentPage> {
       var body = {
         'id_pembelian': pembelianId.toString(),
         'status_pembayaran': statusPembayaran,
+        'status_pembelian': 'Belum Dibayar',
         'total_harga': totalHarga.toString(),
       };
 
