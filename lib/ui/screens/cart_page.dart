@@ -51,7 +51,7 @@ class _CartPageState extends State<CartPage> {
       if (userId != 0) {
         print('Fetching cart plants for user ID: $userId');
         final response = await http.get(
-          Uri.parse('http://192.168.5.108/backend-manggofloat/PembelianAPI.php?id_pengguna=$userId'),
+          Uri.parse('http://10.0.2.2/backend-manggofloat/PembelianAPI.php?id_pengguna=$userId'),
         );
 
         print('Response status: ${response.statusCode}');

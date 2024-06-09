@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   static const String baseUrl =
-      'http://192.168.5.108/backend-manggofloat/PenggunaAPI.php';
+      'http://10.0.2.2/backend-manggofloat/PenggunaAPI.php';
 
   static Future<Map<String, dynamic>> loginUser({
     required String email,

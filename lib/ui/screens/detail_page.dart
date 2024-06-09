@@ -76,7 +76,7 @@ class _DetailPageState extends State<DetailPage> {
 
       final response = await http.post(
         Uri.parse(
-            'http://192.168.5.108/backend-manggofloat/PembelianAPI.php'), // Sesuaikan URL backend Anda
+            'http://10.0.2.2/backend-manggofloat/PembelianAPI.php'), // Sesuaikan URL backend Anda
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },

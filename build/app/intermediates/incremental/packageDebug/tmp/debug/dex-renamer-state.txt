@@ -1,4 +1,4 @@
-#Wed Jun 05 16:11:41 WIB 2024
-base.0=D\:\\Jokian\\UNIMAL\\Sistem Informasi\\WEB ECOMMERCE\\UAS\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+#Sun Jun 09 13:44:13 ICT 2024
+base.0=D\:\\FLUTTER-ManggoFloat\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

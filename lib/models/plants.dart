@@ -26,7 +26,7 @@ class Plant {
   });
 
   factory Plant.fromJson(Map<String, dynamic> json) {
-    const String baseUrl = 'http://192.168.5.108/backend-manggofloat/';
+    const String baseUrl = 'http://10.0.2.2/backend-manggofloat/';
 
     // Debug log untuk JSON yang diterima
     print("Parsing Plant from JSON: $json");

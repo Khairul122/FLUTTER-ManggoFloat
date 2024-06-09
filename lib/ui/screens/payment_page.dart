@@ -58,7 +58,7 @@ class _PaymentPageState extends State<PaymentPage> {
       print("total_harga: $totalHarga");
 
       final response = await http.put(
-        Uri.parse('http://192.168.5.108/backend-manggofloat/PembelianAPI.php'), // Sesuaikan URL backend Anda
+        Uri.parse('http://10.0.2.2/backend-manggofloat/PembelianAPI.php'), 
         headers: {
           'Content-Type': 'application/json',
         },
@@ -288,7 +288,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     // Mengambil ID Pembelian yang sesuai untuk user
                     final response = await http.get(
                       Uri.parse(
-                          'http://192.168.5.108/backend-manggofloat/PembelianAPI.php?id_pengguna=$userId'),
+                          'http://10.0.2.2/backend-manggofloat/PembelianAPI.php?id_pengguna=$userId'),
                     );
 
                     if (response.statusCode == 200) {
