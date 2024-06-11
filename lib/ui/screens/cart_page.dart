@@ -145,7 +145,7 @@ class _CartPageState extends State<CartPage> {
                     itemBuilder: (BuildContext context, int index) {
                       final plant = _addedToCartPlants[index];
                       return GestureDetector(
-                        onTap: (plant.statusPembelian != 'Sudah Dibayar' && plant.statusPembelian != 'Selesai')
+                        onTap: (plant.statusPembelian != 'Sudah Dibayar' && plant.statusPembelian != 'Selesai' && plant.statusPembelian != 'Diterima')
                             ? () {
                                 Navigator.push(
                                   context,
