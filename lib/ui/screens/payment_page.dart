@@ -31,9 +31,10 @@ class _PaymentPageState extends State<PaymentPage> {
           actions: <Widget>[
             TextButton(
               child: Text("OK"),
-              onPressed: onOkPressed ?? () {
-                Navigator.of(context).pop();
-              },
+              onPressed: onOkPressed ??
+                  () {
+                    Navigator.of(context).pop();
+                  },
             ),
           ],
         );
@@ -41,47 +42,35 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Future<void> _updatePembelian(int pembelianId, String statusPembayaran, double totalHarga) async {
+  Future<void> _updatePembelian(
+      int pembelianId, String statusPembayaran, double totalHarga) async {
     try {
       var body = {
         'id_pembelian': pembelianId.toString(),
         'status_pembayaran': statusPembayaran,
-        'status_pembelian': 'Belum Dibayar',
+        'status_pembelian': 'Sudah Dibayar',
         'total_harga': totalHarga.toString(),
       };
 
-      // Logging data yang dikirim ke API
-      print("Sending data to API:");
-      print("id_pembelian: $pembelianId");
-      print("status_pembayaran: $statusPembayaran");
-      print("total_harga: $totalHarga");
-
       final response = await http.put(
-        Uri.parse('http://10.0.2.2/backend-manggofloat/PembelianAPI.php'), 
+        Uri.parse('http://10.0.2.2/backend-manggofloat/PembelianAPI.php'),
         headers: {
           'Content-Type': 'application/json',
         },
         body: json.encode(body),
       );
 
-      // Logging respons dari API
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
-
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
         if (responseBody['status'] == 'success') {
-          // Jika berhasil
           _showDialog('Berhasil', 'Pesanan berhasil disimpan', onOkPressed: () {
             Navigator.of(context).pop(); // Menutup dialog
             _navigateToPaymentPage(statusPembayaran);
           });
         } else {
-          // Jika gagal
           _showDialog('Gagal', 'Pesanan gagal: ${responseBody['message']}');
         }
       } else {
-        // Jika gagal
         _showDialog('Gagal', 'Pesanan gagal: ${response.reasonPhrase}');
       }
     } catch (e) {
@@ -117,7 +106,9 @@ class _PaymentPageState extends State<PaymentPage> {
     String alamat =
         userData != null ? Map<String, dynamic>.from(userData)['alamat'] : '';
     double ongkir = userData != null
-        ? double.tryParse(Map<String, dynamic>.from(userData)['ongkir'].toString()) ?? 0
+        ? double.tryParse(
+                Map<String, dynamic>.from(userData)['ongkir'].toString()) ??
+            0
         : 0;
 
     double subtotalProduk = widget.plant.price * widget.plant.jumlah.toDouble();
@@ -174,7 +165,8 @@ class _PaymentPageState extends State<PaymentPage> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Text('Jumlah: ${widget.plant.jumlah}'),
-                      Text('Rp${formatCurrency(widget.plant.price.toDouble())}'),
+                      Text(
+                          'Rp${formatCurrency(widget.plant.price.toDouble())}'),
                     ],
                   ),
                 ],
@@ -262,7 +254,8 @@ class _PaymentPageState extends State<PaymentPage> {
                   Divider(),
                   _buildPaymentDetailRow('Subtotal untuk Produk',
                       'Rp${formatCurrency(subtotalProduk)}'),
-                  _buildPaymentDetailRow('Subtotal Pengiriman', 'Rp ${formatCurrency(ongkir)}'),
+                  _buildPaymentDetailRow(
+                      'Subtotal Pengiriman', 'Rp ${formatCurrency(ongkir)}'),
                   Divider(),
                   _buildPaymentDetailRow(
                     'Total Pembayaran',
@@ -278,28 +271,31 @@ class _PaymentPageState extends State<PaymentPage> {
                 onPressed: () async {
                   String statusPembayaran = isCODSelected ? 'COD' : 'DANA';
                   try {
-                    // Verifikasi ID Pembelian sebelum melakukan update
                     var box = Hive.box('userBox');
                     var userData = box.get('userData');
                     int userId = userData != null
-                        ? int.tryParse(Map<String, dynamic>.from(userData)['id_pengguna']
+                        ? int.tryParse(Map<String, dynamic>.from(
+                                    userData)['id_pengguna']
                                 .toString()) ??
                             0
                         : 0;
 
-                    // Mengambil ID Pembelian yang sesuai untuk user
                     final response = await http.get(
                       Uri.parse(
                           'http://10.0.2.2/backend-manggofloat/PembelianAPI.php?id_pengguna=$userId'),
                     );
 
                     if (response.statusCode == 200) {
-                      final List<dynamic> responseBody = json.decode(response.body);
+                      final List<dynamic> responseBody =
+                          json.decode(response.body);
                       if (responseBody.isNotEmpty) {
-                        final int pembelianId = int.parse(responseBody.last['id_pembelian']); // Mengambil ID Pembelian terbaru
-                        await _updatePembelian(pembelianId, statusPembayaran, totalHarga);
+                        final int pembelianId = int.parse(responseBody.last[
+                            'id_pembelian']); // Mengambil ID Pembelian terbaru
+                        await _updatePembelian(
+                            pembelianId, statusPembayaran, totalHarga);
                       } else {
-                        _showDialog('Gagal', 'Tidak ada pembelian yang ditemukan.');
+                        _showDialog(
+                            'Gagal', 'Tidak ada pembelian yang ditemukan.');
                       }
                     } else {
                       _showDialog('Gagal', 'Gagal mengambil data pembelian.');
